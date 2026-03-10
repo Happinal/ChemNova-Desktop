@@ -4,82 +4,110 @@
 <meta charset="UTF-8">
 <title>ChemNova Virtual Chemistry Lab</title>
 <style>
-body {
-  font-family: Arial;
+body{
+  font-family:Arial;
   background:#0f172a;
   color:white;
   text-align:center;
 }
-h1 { color:#38bdf8; }
-
-button {
-  margin:10px;
-  padding:10px 20px;
+h1{color:#38bdf8;}
+input,button{
+  margin:8px;
+  padding:8px;
   font-size:16px;
-  background:#22d3ee;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
 }
-
-#flask {
-  width:120px;
-  height:150px;
+#flask{
+  width:140px;
+  height:170px;
   margin:20px auto;
   background:red;
-  border-radius:0 0 60px 60px;
+  border-radius:0 0 70px 70px;
+  transition:0.5s;
 }
 </style>
 </head>
-
 <body>
 
 <h1>ChemNova Virtual Chemistry Lab</h1>
 <p>Developed by Anga Peter Inalegwu</p>
 
-<button onclick="startLab()">Start Titration</button>
+<h2>Strong Acid – Strong Base Titration</h2>
 
-<div id="lab" style="display:none;">
+<label>Acid Molarity (M):</label>
+<input id="acidM" value="0.1">
+
+<label>Base Molarity (M):</label>
+<input id="baseM" value="0.1">
+
+<br>
+
+<button onclick="startExperiment()">Start Experiment</button>
+
+<div id="labArea" style="display:none;">
   <div id="flask"></div>
+  <p id="volumeInfo">Base Volume Added: 0 mL</p>
   <p id="phValue">pH: 1.00</p>
-  <button onclick="addDrop()">Add NaOH Drop</button>
+  <button onclick="addDrop()">Add 1 mL NaOH</button>
   <button onclick="resetLab()">Reset</button>
 </div>
 
 <script>
-let volumeBase = 0;
-let equivalencePoint = 20;
-let ph = 1;
+let acidVolume = 50; // mL
+let baseVolume = 0;
 
-function startLab(){
-  document.getElementById("lab").style.display = "block";
+function startExperiment(){
+  baseVolume = 0;
+  document.getElementById("labArea").style.display="block";
+  calculatePH();
 }
 
 function addDrop(){
-  volumeBase++;
+  baseVolume += 1;
+  calculatePH();
+}
 
-  if(volumeBase < equivalencePoint){
-    ph = 1 + (volumeBase * 0.15);
-  } else if(volumeBase === equivalencePoint){
+function calculatePH(){
+  let acidM = parseFloat(document.getElementById("acidM").value);
+  let baseM = parseFloat(document.getElementById("baseM").value);
+
+  let nAcid = acidM * (acidVolume/1000);
+  let nBase = baseM * (baseVolume/1000);
+  let totalVolume = (acidVolume + baseVolume)/1000;
+
+  let ph;
+
+  if(nBase < nAcid){
+    let H = (nAcid - nBase) / totalVolume;
+    ph = -Math.log10(H);
+  }
+  else if(nBase === nAcid){
     ph = 7;
-  } else {
-    ph = 7 + ((volumeBase - equivalencePoint) * 0.3);
+  }
+  else{
+    let OH = (nBase - nAcid) / totalVolume;
+    let pOH = -Math.log10(OH);
+    ph = 14 - pOH;
   }
 
   if(ph > 14) ph = 14;
+  if(ph < 0) ph = 0;
 
-  document.getElementById("phValue").innerText = "pH: " + ph.toFixed(2);
+  document.getElementById("volumeInfo").innerText =
+    "Base Volume Added: " + baseVolume + " mL";
+
+  document.getElementById("phValue").innerText =
+    "pH: " + ph.toFixed(2);
 
   if(ph > 8){
-    document.getElementById("flask").style.background = "pink";
+    document.getElementById("flask").style.background="pink";
+  } else {
+    document.getElementById("flask").style.background="red";
   }
 }
 
 function resetLab(){
-  volumeBase = 0;
-  ph = 1;
-  document.getElementById("phValue").innerText = "pH: 1.00";
-  document.getElementById("flask").style.background = "red";
+  baseVolume = 0;
+  document.getElementById("labArea").style.display="none";
 }
 </script>
 
