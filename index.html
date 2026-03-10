@@ -8,7 +8,7 @@
       background-color: #0f172a;
       color: white;
       text-align: center;
-      padding-top: 100px;
+      padding-top: 60px;
     }
     h1 {
       color: #38bdf8;
@@ -25,13 +25,40 @@
     button:hover {
       background-color: #06b6d4;
     }
+    .simulation {
+      margin-top: 40px;
+      display: none;
+    }
   </style>
 </head>
 <body>
+
   <h1>Welcome to ChemNova Virtual Chemistry</h1>
   <p>2026 Edition</p>
-  <button onclick="alert('Simulation Coming Soon!')">
-    Start Experiment
-  </button>
+
+  <button onclick="startExperiment()">Start Experiment</button>
+
+  <div class="simulation" id="simulationArea">
+    <h2>Acid-Base Titration Simulation</h2>
+    <p>Adding NaOH to HCl...</p>
+    <button onclick="addDrop()">Add Drop</button>
+    <p id="phValue">Current pH: 1</p>
+  </div>
+
+  <script>
+    let ph = 1;
+
+    function startExperiment() {
+      document.getElementById("simulationArea").style.display = "block";
+    }
+
+    function addDrop() {
+      if (ph < 14) {
+        ph += 1;
+        document.getElementById("phValue").innerText = "Current pH: " + ph;
+      }
+    }
+  </script>
+
 </body>
 </html>
