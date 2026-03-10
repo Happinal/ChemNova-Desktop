@@ -1,91 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>ChemNova Virtual Chemistry Lab</title>
-<style>
-body {
-  font-family: Arial;
-  background:#0f172a;
-  color:white;
-  text-align:center;
-}
-h1 { color:#38bdf8; }
-
-.menu button {
-  margin:10px;
-  padding:10px 20px;
-  font-size:16px;
-  background:#22d3ee;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.section {
-  display:none;
-  margin-top:30px;
-}
-
-select, button {
-  padding:8px;
-  margin:8px;
-}
-#flask {
-  width:120px;
-  height:150px;
-  margin:20px auto;
-  background:red;
-  border-radius:0 0 60px 60px;
-}
-</style>
-</head>
-<body>
-
-<h1>ChemNova Virtual Chemistry Lab</h1>
-<p>Developed by Anga Peter Inalegwu</p>
-
-<div class="menu">
-  <button onclick="showSection('titration')">Acid-Base Titration</button>
-  <button onclick="showSection('solutions')">Solutions</button>
-  <button onclick="showSection('apparatus')">Apparatus</button>
-</div>
-
-<!-- TITRATION -->
-<div id="titration" class="section">
-  <h2>Acid-Base Titration</h2>
-
-  <label>Select Acid:</label>
-  <select id="acid">
-    <option>HCl (Strong Acid)</option>
-    <option>CH3COOH (Weak Acid)</option>
-  </select>
-
-  <div id="flask"></div>
-  <p id="phValue">pH: 1</p>
-
-  <button onclick="addDrop()">Add NaOH Drop</button>
-  <button onclick="reset()">Reset</button>
-</div>
-
-<!-- SOLUTIONS -->
-<div id="solutions" class="section">
-  <h2>Available Solutions</h2>
-  <p><strong>Strong Acids:</strong> HCl, HNO₃, H₂SO₄</p>
-  <p><strong>Weak Acids:</strong> CH₃COOH</p>
-  <p><strong>Strong Bases:</strong> NaOH, KOH</p>
-  <p><strong>Weak Bases:</strong> NH₃</p>
-</div>
-
-<!-- APPARATUS -->
-<div id="apparatus" class="section">
-  <h2>Laboratory Apparatus</h2>
-  <p>Burette</p>
-  <p>Conical Flask</p>
-  <p>Pipette</p>
-  <p>Beaker</p>
-</div>
-
 <script>
+let volumeBase = 0;
+let equivalencePoint = 20;
 let ph = 1;
 
 function showSection(id) {
@@ -94,21 +9,31 @@ function showSection(id) {
 }
 
 function addDrop() {
-  if (ph < 14) {
-    ph += 0.5;
-    document.getElementById("phValue").innerText = "pH: " + ph.toFixed(1);
-    if (ph > 8) {
-      document.getElementById("flask").style.background = "pink";
-    }
+  volumeBase += 1;
+
+  if (volumeBase < equivalencePoint) {
+    ph = 1 + (volumeBase * 0.15);
+  } 
+  else if (volumeBase === equivalencePoint) {
+    ph = 7;
+  } 
+  else {
+    ph = 7 + ((volumeBase - equivalencePoint) * 0.3);
+  }
+
+  if (ph > 14) ph = 14;
+
+  document.getElementById("phValue").innerText = "pH: " + ph.toFixed(2);
+
+  if (ph > 8) {
+    document.getElementById("flask").style.background = "pink";
   }
 }
 
 function reset() {
+  volumeBase = 0;
   ph = 1;
   document.getElementById("phValue").innerText = "pH: 1";
   document.getElementById("flask").style.background = "red";
 }
 </script>
-
-</body>
-</html>
