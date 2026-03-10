@@ -2,81 +2,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ChemNova 3D Virtual Lab</title>
+<title>ChemNova 3D Engine Test</title>
 <style>
-body { margin:0; overflow:hidden; }
-#ui {
-  position:absolute;
-  top:10px;
-  left:10px;
-  z-index:10;
-}
-button {
-  padding:8px;
-  margin:5px;
-}
+body { margin:0; overflow:hidden; background:#111; color:white; text-align:center; }
 </style>
 </head>
 <body>
 
-<div id="ui">
-  <button onclick="addBeaker()">Add Beaker</button>
-  <button onclick="addBottle()">Add Reagent Bottle</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+<h2>Testing WebGL...</h2>
 
 <script>
-let scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1e293b);
+const canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
 
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0,5,10);
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-let renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const gl = canvas.getContext("webgl");
 
-let controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-let light = new THREE.DirectionalLight(0xffffff,1);
-light.position.set(5,10,7);
-scene.add(light);
-
-let ambient = new THREE.AmbientLight(0xffffff,0.4);
-scene.add(ambient);
-
-// Lab Table
-let tableGeometry = new THREE.BoxGeometry(20,1,20);
-let tableMaterial = new THREE.MeshStandardMaterial({color:0x555555});
-let table = new THREE.Mesh(tableGeometry, tableMaterial);
-table.position.y = -1;
-scene.add(table);
-
-function addBeaker(){
-  let geometry = new THREE.CylinderGeometry(1,1,2,32,1,true);
-  let material = new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:0.4});
-  let beaker = new THREE.Mesh(geometry, material);
-  beaker.position.set(Math.random()*4-2,0,Math.random()*4-2);
-  scene.add(beaker);
+if(!gl){
+  document.body.innerHTML = "<h1 style='color:red'>WebGL NOT Supported</h1>";
+}else{
+  document.body.innerHTML = "<h1 style='color:lime'>WebGL Supported ✔</h1>";
 }
-
-function addBottle(){
-  let geometry = new THREE.CylinderGeometry(0.5,0.7,3,32);
-  let material = new THREE.MeshStandardMaterial({color:0x22d3ee});
-  let bottle = new THREE.Mesh(geometry, material);
-  bottle.position.set(Math.random()*4-2,0.5,Math.random()*4-2);
-  scene.add(bottle);
-}
-
-function animate(){
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene,camera);
-}
-
-animate();
 </script>
 
 </body>
