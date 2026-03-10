@@ -1,39 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ChemNova Virtual Chemistry Lab</title>
+<style>
+body {
+  font-family: Arial;
+  background:#0f172a;
+  color:white;
+  text-align:center;
+}
+h1 { color:#38bdf8; }
+
+button {
+  margin:10px;
+  padding:10px 20px;
+  font-size:16px;
+  background:#22d3ee;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+#flask {
+  width:120px;
+  height:150px;
+  margin:20px auto;
+  background:red;
+  border-radius:0 0 60px 60px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>ChemNova Virtual Chemistry Lab</h1>
+<p>Developed by Anga Peter Inalegwu</p>
+
+<button onclick="startLab()">Start Titration</button>
+
+<div id="lab" style="display:none;">
+  <div id="flask"></div>
+  <p id="phValue">pH: 1.00</p>
+  <button onclick="addDrop()">Add NaOH Drop</button>
+  <button onclick="resetLab()">Reset</button>
+</div>
+
 <script>
 let volumeBase = 0;
 let equivalencePoint = 20;
 let ph = 1;
 
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(sec => sec.style.display="none");
-  document.getElementById(id).style.display="block";
+function startLab(){
+  document.getElementById("lab").style.display = "block";
 }
 
-function addDrop() {
-  volumeBase += 1;
+function addDrop(){
+  volumeBase++;
 
-  if (volumeBase < equivalencePoint) {
+  if(volumeBase < equivalencePoint){
     ph = 1 + (volumeBase * 0.15);
-  } 
-  else if (volumeBase === equivalencePoint) {
+  } else if(volumeBase === equivalencePoint){
     ph = 7;
-  } 
-  else {
+  } else {
     ph = 7 + ((volumeBase - equivalencePoint) * 0.3);
   }
 
-  if (ph > 14) ph = 14;
+  if(ph > 14) ph = 14;
 
   document.getElementById("phValue").innerText = "pH: " + ph.toFixed(2);
 
-  if (ph > 8) {
+  if(ph > 8){
     document.getElementById("flask").style.background = "pink";
   }
 }
 
-function reset() {
+function resetLab(){
   volumeBase = 0;
   ph = 1;
-  document.getElementById("phValue").innerText = "pH: 1";
+  document.getElementById("phValue").innerText = "pH: 1.00";
   document.getElementById("flask").style.background = "red";
 }
 </script>
+
+</body>
+</html>
