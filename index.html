@@ -4,61 +4,74 @@
   <title>ChemNova Virtual Chemistry</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background-color: #0f172a;
       color: white;
       text-align: center;
-      padding-top: 60px;
+      padding: 40px;
     }
-    h1 {
-      color: #38bdf8;
-    }
+
+    h1 { color: #38bdf8; }
+
     button {
-      padding: 15px 30px;
-      font-size: 18px;
-      margin-top: 20px;
-      background-color: #22d3ee;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      background: #22d3ee;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #06b6d4;
+
+    #flask {
+      width: 120px;
+      height: 150px;
+      margin: 20px auto;
+      background: red;
+      border-radius: 0 0 60px 60px;
     }
-    .simulation {
-      margin-top: 40px;
-      display: none;
-    }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to ChemNova Virtual Chemistry</h1>
-  <p>2026 Edition</p>
+<h1>ChemNova Virtual Chemistry Lab</h1>
 
-  <button onclick="startExperiment()">Start Experiment</button>
+<button onclick="startExperiment()">Start Titration</button>
 
-  <div class="simulation" id="simulationArea">
-    <h2>Acid-Base Titration Simulation</h2>
-    <p>Adding NaOH to HCl...</p>
-    <button onclick="addDrop()">Add Drop</button>
-    <p id="phValue">Current pH: 1</p>
-  </div>
+<div id="lab" class="hidden">
+  <h2>Acid-Base Titration</h2>
+  <div id="flask"></div>
+  <p id="phValue">pH: 1</p>
+  <button onclick="addDrop()">Add NaOH Drop</button>
+  <button onclick="reset()">Reset</button>
+</div>
 
-  <script>
-    let ph = 1;
+<script>
+let ph = 1;
 
-    function startExperiment() {
-      document.getElementById("simulationArea").style.display = "block";
+function startExperiment() {
+  document.getElementById("lab").classList.remove("hidden");
+}
+
+function addDrop() {
+  if (ph < 14) {
+    ph += 0.5;
+    document.getElementById("phValue").innerText = "pH: " + ph.toFixed(1);
+
+    if (ph > 8) {
+      document.getElementById("flask").style.background = "pink";
     }
+  }
+}
 
-    function addDrop() {
-      if (ph < 14) {
-        ph += 1;
-        document.getElementById("phValue").innerText = "Current pH: " + ph;
-      }
-    }
-  </script>
+function reset() {
+  ph = 1;
+  document.getElementById("phValue").innerText = "pH: 1";
+  document.getElementById("flask").style.background = "red";
+}
+</script>
 
 </body>
 </html>
